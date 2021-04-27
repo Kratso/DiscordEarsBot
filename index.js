@@ -302,8 +302,10 @@ function speak_impl(voice_Connection, mapKey) {
             try {
                 let new_buffer = await convert_audio(buffer)
                 let out = await transcribe(new_buffer);
-                if (out != null)
-                    process_commands_query(out, mapKey, user);
+                if (out != null){
+                    const member = voice_Connection.guild.member(user);
+                    process_commands_query(out, mapKey, user, member);
+                  }
             } catch (e) {
                 console.log('tmpraw rename: ' + e)
             }
@@ -316,7 +318,10 @@ function speak_impl(voice_Connection, mapKey) {
 function process_commands_query(txt, mapKey, user) {
     if (txt && txt.length) {
         let val = guildMap.get(mapKey);
-        val.text_Channel.send(user.username + ': ' + txt)
+        member.displayName 
+          ? val.text_Channel.send(member.displayName  + ': ' + txt)
+          : val.text_Channel.send(user.username + ': ' + txt)
+        
     }
 }
 
